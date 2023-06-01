@@ -1,50 +1,66 @@
 import customtkinter
 import pandas as pd
 
-def option_menu_select(choice):
-    if choice == opt_values[0]:
-        # Load the CSV file for "Application Gateway"
-        df = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="App Gateway")
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
 
-        # Create textbox with AppGateway data
-        text_widget = customtkinter.CTkTextbox(app, state="disabled", height=350, width=900)
-        text_widget.grid(row=1, column=0, padx=20, pady=10)
-        text_widget.configure(state="normal")
-        text_widget.insert("0.0", df)
-        text_widget.configure(state="disabled")
+        # Set size of window
+        self.geometry("500x300")
+        self.title("Pandas Gui")
+        self.minsize(400, 200)
 
-    elif choice == opt_values[1]:
-        # Load the CSV file for "Application Gateway"
-        df = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Key Vault")
+        # Set the grid config
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure((0, 1), weight=1)
 
-        # Create textbox with AppGateway data
-        text_widget = customtkinter.CTkTextbox(app, state="disabled", height=350, width=900)
-        text_widget.grid(row=1, column=0, padx=20, pady=10)
-        text_widget.configure(state="normal")
-        text_widget.insert("0.0", df)
-        text_widget.configure(state="disabled")
-    elif choice == opt_values[2]:
-        # Load the CSV file for "Application Gateway"
-        df = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Azure Blob Storage")
+        # Frame that occupies textbox space before selection
+        self.frame = customtkinter.CTkFrame(master=self)
+        self.frame.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
 
-        # Create textbox with AppGateway data
-        text_widget = customtkinter.CTkTextbox(app, state="disabled", height=350, width=900)
-        text_widget.grid(row=1, column=0, padx=20, pady=10)
-        text_widget.configure(state="normal")
-        text_widget.insert("0.0", df)
-        text_widget.configure(state="disabled")
+        # Starting variable for the option menu dropdown
+        self.variable = customtkinter.StringVar()
+        self.variable.set("Select Requirements")
 
-app = customtkinter.CTk()
-app.title("Pandas Gui")
-app.geometry("950x500")
+        # Option menu with selections
+        self.opt_menu = customtkinter.CTkOptionMenu(master=self, variable=self.variable, values=["Application Gateway", "Key Vault", "Azure Blob Storage"], command=self.option_menu_select)
+        self.opt_menu.grid(row=1, column=0, columnspan=2, padx=20, pady=20, sticky="ew")
 
+    def option_menu_select(self, choice):
+        if choice == self.opt_menu._values[0]:
 
+            # Read the Q2_excel file that you and select the App Gateway sheet
+            df = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="App Gateway")
 
-opt_values = ["Application Gateway", "Key Vault", "Azure Blob Storage"]
-variable = customtkinter.StringVar()
-variable.set("Select Requirements")
+            # Create the textbox with excel information to fit inside the frame created in the __init__ function
+            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
+            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
+            self.textbox.configure(state="normal")
+            self.textbox.insert("0.0", df)
+            self.textbox.configure(state="disabled")
+        elif choice == self.opt_menu._values[1]:
 
-optionmenu = customtkinter.CTkOptionMenu(app, variable=variable, values=opt_values, command=option_menu_select)
-optionmenu.grid(row=0, column=0, padx=20, pady=20)
+            # Read the Q2_excel file that you and select the Key Vault sheet
+            df = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Key Vault")
 
-app.mainloop()
+            # Create the textbox with excel information to fit inside the frame created in the __init__ function
+            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
+            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
+            self.textbox.configure(state="normal")
+            self.textbox.insert("0.0", df)
+            self.textbox.configure(state="disabled")
+        elif choice == self.opt_menu._values[2]:
+
+            # Read the Q2_excel file that you and select the Azure Blob Storage sheet
+            df = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Azure Blob Storage")
+
+            # Create the textbox with excel information to fit inside the frame created in the __init__ function
+            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
+            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
+            self.textbox.configure(state="normal")
+            self.textbox.insert("0.0", df)
+            self.textbox.configure(state="disabled")
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
