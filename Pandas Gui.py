@@ -30,7 +30,7 @@ class App(customtkinter.CTk):
         if choice == self.opt_menu._values[0]:
 
             # Read the Q2_excel file that you provide and select the App Gateway sheet
-            self.dfA = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="App Gateway")
+            self.dfA = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="App Gateway")
 
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
@@ -49,13 +49,13 @@ class App(customtkinter.CTk):
         elif choice == self.opt_menu._values[1]:
 
             # Read the Q2_excel file that you provide and select the Key Vault sheet
-            self.dfK = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Key Vault")
+            self.dfK = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Key Vault")
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", self.dfK)
+            self.textbox.insert("0.0", self.dfK.to_records())
             self.textbox.configure(state="disabled")
 
             self.variable2 = customtkinter.StringVar()
@@ -67,13 +67,13 @@ class App(customtkinter.CTk):
         elif choice == self.opt_menu._values[2]:
 
             # Read the Q2_excel file that you provide and select the Azure Blob Storage sheet
-            self.dfB = pd.read_excel(r"C:\Users\Christopher\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Azure Blob Storage")
+            self.dfB = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Azure Blob Storage")
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", self.dfB)
+            self.textbox.insert("0.0", self.dfB.to_records())
             self.textbox.configure(state="disabled")
     
             self.variable2 = customtkinter.StringVar()
@@ -116,7 +116,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
         elif filter == "FVNV":
             pdf_filter1 = self.dfK.query("Instance == 'FVNV'")
@@ -124,7 +124,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
         elif filter == "Galaxy":
             pdf_filter1 = self.dfK.query("Instance == 'Galaxy'")
@@ -132,7 +132,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
         
     def option_menu_filter_Blob(self, filter):
@@ -142,7 +142,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
         elif filter == "FVNV":
             pdf_filter1 = self.dfB.query("Instance == 'FVNV'")
@@ -150,7 +150,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
         elif filter == "Galaxy":
             pdf_filter1 = self.dfB.query("Instance == 'Galaxy'")
@@ -158,7 +158,7 @@ class App(customtkinter.CTk):
             self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
             self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
             self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1)
+            self.textbox.insert("0.0", pdf_filter1.to_records())
             self.textbox.configure(state="disabled")
 
 if __name__ == "__main__":
