@@ -34,11 +34,7 @@ class App(customtkinter.CTk):
 
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", self.dfA.to_records())
-            self.textbox.configure(state="disabled")
+            self.textbox_insert(self.dfA.to_records())
 
             self.variable2 = customtkinter.StringVar()
             self.variable2.set("Select Instance")
@@ -52,11 +48,7 @@ class App(customtkinter.CTk):
             self.dfK = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Key Vault")
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", self.dfK.to_records())
-            self.textbox.configure(state="disabled")
+            self.textbox_insert(self.dfK.to_records())
 
             self.variable2 = customtkinter.StringVar()
             self.variable2.set("Select Instance")
@@ -70,11 +62,7 @@ class App(customtkinter.CTk):
             self.dfB = pd.read_excel(r"C:\Users\Christopher_Patrick\OneDrive - Edwards Lifesciences\Desktop\Capability_Q2_RequirementsLibrary.xlsx", sheet_name="Azure Blob Storage")
 
             # Create the textbox with excel information to fit inside the frame created in the __init__ function
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", self.dfB.to_records())
-            self.textbox.configure(state="disabled")
+            self.textbox_insert(self.dfB.to_records())
     
             self.variable2 = customtkinter.StringVar()
             self.variable2.set("Select Instance")
@@ -83,83 +71,26 @@ class App(customtkinter.CTk):
             self.opt_menu2.grid(row=1, column=1, padx=20, pady=20, sticky="ew")
 
     def option_menu_filter_AG(self, filter):
-        if filter == "VNV":
-            pdf_filter1 = self.dfA.query("Instance == 'VNV'")
-
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "FVNV":
-            pdf_filter1 = self.dfA.query("Instance == 'FVNV'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "Galaxy":
-            pdf_filter1 = self.dfA.query("Instance == 'Galaxy'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
+        if filter == "VNV" or filter == "FVNV" or filter == "Galaxy":
+            filter_dict={"VNV" : self.dfA.query("Instance == 'VNV'"), "FVNV" : self.dfA.query("Instance == 'FVNV'"), "Galaxy" : self.dfA.query("Instance == 'Galaxy'")}
+            self.textbox_insert(filter_dict[filter].to_records())
 
     def option_menu_filter_KV(self, filter):
-        if filter == "VNV":
-            pdf_filter1 = self.dfK.query("Instance == 'VNV'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "FVNV":
-            pdf_filter1 = self.dfK.query("Instance == 'FVNV'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "Galaxy":
-            pdf_filter1 = self.dfK.query("Instance == 'Galaxy'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
+        if filter == "VNV" or filter == "FVNV" or filter == "Galaxy":
+            filter_dict={"VNV" : self.dfK.query("Instance == 'VNV'"), "FVNV" : self.dfK.query("Instance == 'FVNV'"), "Galaxy" : self.dfK.query("Instance == 'Galaxy'")}
+            self.textbox_insert(filter_dict[filter].to_records())
         
     def option_menu_filter_Blob(self, filter):
-        if filter == "VNV":
-            pdf_filter1 = self.dfB.query("Instance == 'VNV'")
+        if filter == "VNV" or filter == "FVNV" or filter == "Galaxy":
+            filter_dict={"VNV" : self.dfB.query("Instance == 'VNV'"), "FVNV" : self.dfB.query("Instance == 'FVNV'"), "Galaxy" : self.dfB.query("Instance == 'Galaxy'")}
+            self.textbox_insert(filter_dict[filter].to_records())
 
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "FVNV":
-            pdf_filter1 = self.dfB.query("Instance == 'FVNV'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
-        elif filter == "Galaxy":
-            pdf_filter1 = self.dfB.query("Instance == 'Galaxy'")
-
-            self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
-            self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
-            self.textbox.configure(state="normal")
-            self.textbox.insert("0.0", pdf_filter1.to_records())
-            self.textbox.configure(state="disabled")
+    def textbox_insert(self, data):
+        self.textbox = customtkinter.CTkTextbox(master=self, state="disabled")
+        self.textbox.grid(row=0, column=0, columnspan=2, padx=20, pady=(20, 0), sticky="nsew")
+        self.textbox.configure(state="normal")
+        self.textbox.insert("0.0", data)
+        self.textbox.configure(state="disabled")
 
 if __name__ == "__main__":
     app = App()
