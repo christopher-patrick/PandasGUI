@@ -7,8 +7,25 @@ jobs:
       - uses: actions/checkout@master
       - name: Automatic requirements.txt for Python Project
         uses: ryan-rozario/pipreqs-action@master
-
-        # Put an example of mandatory inputs here
         with:
-          PROJECT_PATH: .   #default is the root of the repository
-          REQUIREMENT_PATH: requirements.txt  #default is requirement.txt in the root of your repository 
+          PROJECT_PATH: .
+          REQUIREMENT_PATH: requirements.txt
+
+  sbom:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@master
+      - name: Download requirements.txt from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: requirements.txt
+          path: ./
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install Snyk
+        run: npm install -g snyk
+      - name: Generate SBOM using Snyk
+        run: snyk sbom --file=requirements.txt --format=cyclonedx > sbom.json
