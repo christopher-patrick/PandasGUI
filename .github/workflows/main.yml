@@ -1,17 +1,20 @@
-    name: Generate Build Manifest
+name: Generate SBOM
 
-    on: [push]
+on: [push]
 
-    jobs:
-      build:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v4
-          - uses: onebeyond/make-manifest@v1
-            with:
-              output-file: build-manifest.json
-          - name: Upload manifest
-            uses: actions/upload-artifact@v4
-            with:
-              name: build-manifest
-              path: build-manifest.json
+jobs:
+  generate_sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: manifest-cyber/manifest-github-action@v1
+        with:
+          action: generate
+          generator: syft
+          format: cyclonedx
+          output-file: sbom.json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-artifact
+          path: sbom.json
