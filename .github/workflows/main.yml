@@ -7,12 +7,15 @@ on:
       - main
 
 jobs:
-  snyk-scan:
-    uses: ../actions/build   # path to the Snyk reusable workflow
-    with:
-      org: my-snyk-org
-      scan_type: SOURCE_CODE
-      scan_directory: ./src
-      exclude_folders: node_modules,dist
-    secrets:
-      token: ${{ secrets.SNYK_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run standardized build
+        uses: ./actions/build   # <— this points to actions/build/action.yml
+        with:
+          language: node
+          version: 18
+          build-directory: ./src
