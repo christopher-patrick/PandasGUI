@@ -12,3 +12,10 @@ jobs:
         with:
           PROJECT_PATH: PandasGUI   #default is the root of the repository
           REQUIREMENT_PATH: PandasGUI/requirements.txt  #default is requirement.txt in the root of your repository 
+      - name: Commit requirements.txt (if changed)
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add PandasGUI/requirements.txt
+          git commit -m "Auto-generate requirements.txt" || echo "No changes to commit"
+          git push
