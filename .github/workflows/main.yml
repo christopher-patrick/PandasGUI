@@ -32,5 +32,7 @@ jobs:
           python-version: '3.x'
       - name: Install Snyk
         run: npm install -g snyk
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
       - name: Generate SBOM using Snyk
         run: snyk sbom --file=requirements.txt --format=cyclonedx1.5+json > sbom.json
