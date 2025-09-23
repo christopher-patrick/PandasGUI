@@ -1,0 +1,145 @@
+name: 'Standardized Build Composite Action'
+
+description: 'A composite action to build projects based on the specified language and version'
+
+inputs:
+  language:
+    description: 'The programming language to use for the build'
+    required: true
+  version:
+    description: 'The version of the programming language to use'
+    required: true
+  build-directory:
+    description: 'The directory where the build files are located'
+    required: false
+    default: '.'
+  requirements-file:
+    description: 'The path to the requirements.txt file for Python projects'
+    required: false
+    default: 'requirements.txt'
+
+outputs:
+  build-status:
+    description: 'The status of the build (success or failure)'
+    value: ${{ steps.set-status.outputs.composite-build-status }}
+  build-duration:
+    description: 'The total time taken to complete the build'
+    value: ${{ steps.set-duration.outputs.build-duration }}
+  build-directory:
+    description: 'The directory where the build was executed'
+    value: ${{ steps.other-build-vars.outputs.build-directory }}
+  language:
+    description: 'The programming language used for the build'
+    value: ${{ steps.other-build-vars.outputs.language }}
+  version:
+    description: 'The version of the programming language used for the build'
+    value: ${{ steps.other-build-vars.outputs.version }}
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Capture start time
+      run: echo "start_time=$(date +%s)" >> $GITHUB_ENV
+      shell: bash
+
+    # Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Set up Node.js environment if the launguage is Node.js
+    - name: Set up Node.js
+      if: ${{ inputs.language == 'node' }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.version }}
+
+    # Change directory to the input directory if defined and install Node.js dependencies if the language is Node.js
+    - name: Install dependencies (Node.js)
+      if: ${{ inputs.language == 'node' }}
+      run: |
+        cd ${{ github.workspace }}/${{ inputs.build-directory }}
+        npm install
+      shell: bash
+
+    # Run the build for Node.js if the language is Node.js
+    - name: Run build (Node.js)
+      id: node-build
+      if: ${{ inputs.language == 'node' }}
+      run: |
+        cd ${{ github.workspace }}/${{ inputs.build-directory }}
+        npm run build
+      shell: bash
+
+    # Set up Python environment if the launguage is Python
+    - name: Set up Python
+      if: ${{ inputs.language == 'python' }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.version }}
+
+    # Change directory to the input directory if defined and install Python dependencies if the language is Python
+    - name: Install dependencies (Python)
+      if: ${{ inputs.language == 'python' }}
+      run: |
+        cd ${{ github.workspace }}/${{ inputs.build-directory }}
+        pip install -r ${{ github.workspace }}/${{ inputs.requirements-file }}
+      shell: bash
+
+    # Run the build for Python if the language is Python
+    - name: Run build (Python)
+      id: python-build
+      if: ${{ inputs.language == 'python' }}
+      run: |
+        cd ${{ github.workspace }}/${{ inputs.build-directory }}
+        python setup.py build
+      shell: bash
+
+    # Set up Java environment if the launguage is Java
+    - name: Set up Java
+      if: ${{ inputs.language == 'java' }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ inputs.version }}
+
+    # Run the build for Java using Maven if the language is Java
+    - name: Build with Maven
+      id: java-build
+      if: ${{ inputs.language == 'java' }}
+      run: |
+        cd ${{ github.workspace }}/${{ inputs.build-directory }}
+        mvn clean install
+      shell: bash
+
+    ########################
+    # Capute and set outputs
+    ########################
+
+    # Capture the build status based on the status code
+    - name: Set build status output
+      id: set-status
+      if: success() || failure()
+      run: |
+        if [[ ${{ steps.node-build.outcome }} == 'success' || ${{ steps.python-build.outcome }} == 'success' || ${{ steps.java-build.outcome }} == 'success' ]]; then
+          echo "composite-build-status=success" >> $GITHUB_OUTPUT
+        else
+          echo "composite-build-status=failure" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    # Capture the build duration
+    - name: Set build duration output
+      id: set-duration
+      if: success() || failure()
+      run: echo "build-duration=$(($(date +%s) - $start_time))" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Set other outputs
+    - name: Set other outputs
+      id: other-build-vars
+      if: success() || failure()
+      run: |
+        echo "build-directory=${{ inputs.build-directory }}" >> $GITHUB_OUTPUT
+        echo "language=${{ inputs.language }}" >> $GITHUB_OUTPUT
+        echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+      shell: bash
