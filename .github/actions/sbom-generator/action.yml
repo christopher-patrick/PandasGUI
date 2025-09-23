@@ -1,5 +1,5 @@
-name: "SBOM Generator"
-description: "Generate manifest if missing and run Snyk SBOM"
+name: SBOM Generator
+description: Generate manifest if missing and run Snyk SBOM
 
 inputs:
   org:
@@ -8,12 +8,12 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Detect language and generate manifest
       id: generate-manifest
       shell: bash
-            run: |
+      run: |
         set -e
         MANIFEST_FILE=""
         if [ -f "requirements.txt" ]; then
