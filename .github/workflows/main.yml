@@ -7,15 +7,12 @@ on:
       - main
 
 jobs:
-  build:
+  snyk-sbom:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Run standardized build
-        uses: ./actions/build   # <— this points to actions/build/action.yml
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/sbom-generator
         with:
-          language: node
-          version: 18
-          build-directory: ./src
+          org: my-snyk-org
+          token: ${{ secrets.SNYK_TOKEN }}
+
