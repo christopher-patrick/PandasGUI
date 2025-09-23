@@ -11,44 +11,44 @@ runs:
   using: composite
   steps:
     - name: Detect language and generate manifest
-  id: generate-manifest
-  shell: bash
-  run: |
-    set -e
-    MANIFEST_FILE=""
-    if [ -f "requirements.txt" ]; then
-      MANIFEST_FILE="requirements.txt"
-    elif [ -f "package.json" ]; then
-      MANIFEST_FILE="package.json"
-    elif [ -f "pom.xml" ]; then
-      MANIFEST_FILE="pom.xml"
-    else
-      echo "No manifest found. Generating one..."
-      if ls *.py >/dev/null 2>&1; then
-        pip freeze > requirements.txt || echo "" > requirements.txt
-        MANIFEST_FILE="requirements.txt"
-      elif ls *.js >/dev/null 2>&1; then
-        npm init -y
-        MANIFEST_FILE="package.json"
-      elif ls *.java >/dev/null 2>&1; then
-        cat > pom.xml <<'EOF'
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>autogen</groupId>
-  <artifactId>autogen-project</artifactId>
-  <version>1.0.0</version>
-</project>
-EOF
-        MANIFEST_FILE="pom.xml"
-      else
-        echo '{}' > package.json
-        MANIFEST_FILE="package.json"
-      fi
-    fi
-    echo "manifest_file=$MANIFEST_FILE" >> $GITHUB_OUTPUT
+      id: generate-manifest
+      shell: bash
+      run: |
+        set -e
+        MANIFEST_FILE=""
+        if [ -f "requirements.txt" ]; then
+          MANIFEST_FILE="requirements.txt"
+        elif [ -f "package.json" ]; then
+          MANIFEST_FILE="package.json"
+        elif [ -f "pom.xml" ]; then
+          MANIFEST_FILE="pom.xml"
+        else
+          echo "No manifest found. Generating one..."
+          if ls *.py >/dev/null 2>&1; then
+            pip freeze > requirements.txt || echo "" > requirements.txt
+            MANIFEST_FILE="requirements.txt"
+          elif ls *.js >/dev/null 2>&1; then
+            npm init -y
+            MANIFEST_FILE="package.json"
+          elif ls *.java >/dev/null 2>&1; then
+            cat > pom.xml <<'EOF'
+            <project xmlns="http://maven.apache.org/POM/4.0.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                                         http://maven.apache.org/maven-v4_0_0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>autogen</groupId>
+              <artifactId>autogen-project</artifactId>
+              <version>1.0.0</version>
+            </project>
+            EOF
+            MANIFEST_FILE="pom.xml"
+          else
+            echo '{}' > package.json
+            MANIFEST_FILE="package.json"
+          fi
+        fi
+        echo "manifest_file=$MANIFEST_FILE" >> $GITHUB_OUTPUT
 
     - name: Run Snyk SBOM
       shell: bash
