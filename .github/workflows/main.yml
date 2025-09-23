@@ -10,6 +10,11 @@ jobs:
         with:
           PROJECT_PATH: .
           REQUIREMENT_PATH: requirements.txt
+      - name: Upload requirements.txt
+        uses: actions/upload-artifact@v4
+        with:
+          name: requirements.txt
+          path: requirements.txt
 
   sbom:
     runs-on: ubuntu-latest
