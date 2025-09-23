@@ -1,61 +1,17 @@
-name: SBOM Generator
-description: Generate manifest if missing and run Snyk SBOM
+    name: Generate Build Manifest
 
-inputs:
-  org:
-    required: true
-  token:
-    required: true
+    on: [push]
 
-runs:
-  using: composite
-  steps:
-    - name: Detect language and generate manifest
-      id: generate-manifest
-      shell: bash
-      run: |
-        set -e
-        MANIFEST_FILE=""
-        if [ -f "requirements.txt" ]; then
-          MANIFEST_FILE="requirements.txt"
-        elif [ -f "package.json" ]; then
-          MANIFEST_FILE="package.json"
-        elif [ -f "pom.xml" ]; then
-          MANIFEST_FILE="pom.xml"
-        else
-          echo "No manifest found. Generating one..."
-          if ls *.py >/dev/null 2>&1; then
-            pip freeze > requirements.txt || echo "" > requirements.txt
-            MANIFEST_FILE="requirements.txt"
-          elif ls *.js >/dev/null 2>&1; then
-            npm init -y
-            MANIFEST_FILE="package.json"
-          elif ls *.java >/dev/null 2>&1; then
-            cat > pom.xml <<'EOF'
-            <project xmlns="http://maven.apache.org/POM/4.0.0"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                                         http://maven.apache.org/maven-v4_0_0.xsd">
-              <modelVersion>4.0.0</modelVersion>
-              <groupId>autogen</groupId>
-              <artifactId>autogen-project</artifactId>
-              <version>1.0.0</version>
-            </project>
-            EOF
-            MANIFEST_FILE="pom.xml"
-          else
-            echo '{}' > package.json
-            MANIFEST_FILE="package.json"
-          fi
-        fi
-        echo "manifest_file=$MANIFEST_FILE" >> $GITHUB_OUTPUT
-
-    - name: Run Snyk SBOM
-      shell: bash
-      env:
-        SNYK_TOKEN: ${{ inputs.token }}
-      run: |
-        snyk sbom --file=${{ steps.generate-manifest.outputs.manifest_file }} \
-                  --org="${{ inputs.org }}" \
-                  --format=cyclonedx1.5+json \
-                  --json-file-output="snyk-sbom.json"
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - uses: onebeyond/make-manifest@v1
+            with:
+              output-file: build-manifest.json
+          - name: Upload manifest
+            uses: actions/upload-artifact@v4
+            with:
+              name: build-manifest
+              path: build-manifest.json
