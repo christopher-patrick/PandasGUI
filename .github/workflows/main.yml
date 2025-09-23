@@ -1,20 +1,14 @@
-name: Generate SBOM
-
+name: Integration Test
 on: [push]
-
 jobs:
-  generate_sbom:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: manifest-cyber/manifest-github-action@v1
+      - uses: actions/checkout@master
+      - name: Automatic requirements.txt for Python Project
+        uses: ryan-rozario/pipreqs-action@master
+
+        # Put an example of mandatory inputs here
         with:
-          action: generate
-          generator: syft
-          format: cyclonedx
-          output-file: sbom.json
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom-artifact
-          path: sbom.json
+          PROJECT_PATH: PandasGUI   #default is the root of the repository
+          REQUIREMENT_PATH: PandasGUI/requirements.txt  #default is requirement.txt in the root of your repository 
