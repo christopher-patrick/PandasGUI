@@ -12,10 +12,3 @@ jobs:
         with:
           PROJECT_PATH: .   #default is the root of the repository
           REQUIREMENT_PATH: requirements.txt  #default is requirement.txt in the root of your repository 
-      - name: Commit requirements.txt (if changed)
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add requirements.txt
-          git commit -m "Auto-generate requirements.txt" || echo "No changes to commit"
-          git push
