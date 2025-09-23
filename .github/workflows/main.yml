@@ -1,59 +1,18 @@
-name: Snyk Security Scan
+name: Main Pipeline
 
 on:
+  pull_request:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  snyk:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Detect language and generate manifest
-        id: detect
-        run: |
-          if ls *.js 1> /dev/null 2>&1; then
-            echo "Detected JavaScript/Node.js"
-            npm init -y
-            npx depcheck || true   # optional: detect unused deps
-            echo "file=package.json" >> $GITHUB_OUTPUT
-          
-          elif ls *.py 1> /dev/null 2>&1; then
-            echo "Detected Python"
-            pip install pipreqs
-            pipreqs . --force --savepath requirements.txt
-            echo "file=requirements.txt" >> $GITHUB_OUTPUT
-
-          elif ls *.java 1> /dev/null 2>&1; then
-            echo "Detected Java"
-            echo "<project><modelVersion>4.0.0</modelVersion><groupId>temp</groupId><artifactId>temp</artifactId><version>1.0-SNAPSHOT</version><dependencies></dependencies></project>" > pom.xml
-            echo "file=pom.xml" >> $GITHUB_OUTPUT
-          
-          elif ls *.go 1> /dev/null 2>&1; then
-            echo "Detected Go"
-            go mod init temp || true
-            go mod tidy
-            echo "file=go.mod" >> $GITHUB_OUTPUT
-
-          elif ls *.cs 1> /dev/null 2>&1; then
-            echo "Detected C#/.NET"
-            dotnet new console -n TempApp
-            mv TempApp/TempApp.csproj ./TempApp.csproj
-            echo "file=TempApp.csproj" >> $GITHUB_OUTPUT
-          
-          else
-            echo "No supported language detected."
-            exit 1
-          fi
-
-      - name: Run Snyk
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: test
-          args: --file=${{ steps.detect.outputs.file }}
+  snyk-scan:
+    uses: ./PandasGUI/actions/build/   # path to the Snyk reusable workflow
+    with:
+      org: my-snyk-org
+      scan_type: SOURCE_CODE
+      scan_directory: ./src
+      exclude_folders: node_modules,dist
+    secrets:
+      token: ${{ secrets.SNYK_TOKEN }}
