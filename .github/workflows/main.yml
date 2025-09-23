@@ -8,7 +8,7 @@ on:
 
 jobs:
   snyk-scan:
-    uses: ./PandasGUI/actions/build/   # path to the Snyk reusable workflow
+    uses: actions/build   # path to the Snyk reusable workflow
     with:
       org: my-snyk-org
       scan_type: SOURCE_CODE
