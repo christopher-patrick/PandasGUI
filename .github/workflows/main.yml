@@ -10,8 +10,8 @@ jobs:
 
         # Put an example of mandatory inputs here
         with:
-          PROJECT_PATH: PandasGUI   #default is the root of the repository
-          REQUIREMENT_PATH: PandasGUI/requirements.txt  #default is requirement.txt in the root of your repository 
+          PROJECT_PATH: .   #default is the root of the repository
+          REQUIREMENT_PATH: requirements.txt  #default is requirement.txt in the root of your repository 
       - name: Commit requirements.txt (if changed)
         run: |
           git config --global user.name 'github-actions'
