@@ -33,4 +33,4 @@ jobs:
       - name: Install Snyk
         run: npm install -g snyk
       - name: Generate SBOM using Snyk
-        run: snyk sbom --file=requirements.txt --format=cyclonedx > sbom.json
+        run: snyk sbom --file=requirements.txt --format=cyclonedx1.5+json > sbom.json
