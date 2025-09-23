@@ -16,6 +16,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add PandasGUI/requirements.txt
+          git add requirements.txt
           git commit -m "Auto-generate requirements.txt" || echo "No changes to commit"
           git push
