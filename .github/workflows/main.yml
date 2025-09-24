@@ -39,6 +39,6 @@ jobs:
         shell: bash
         continue-on-error: true
         env:
-          SNYK_TOKEN: ${{ inputs.token }}
+          SNYK_TOKEN: ${{ secrets.token }}
         run: snyk sbom --file=requirements.txt --format=cyclonedx1.5+json > sbom.json
 
