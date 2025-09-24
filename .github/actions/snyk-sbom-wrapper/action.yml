@@ -78,7 +78,7 @@ runs:
 
     - name: Upload code sbom content
       if: always()
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4
       with:
         path: |
           ${{ steps.vars.outputs.snyk_output_sbom }}
