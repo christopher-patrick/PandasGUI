@@ -33,7 +33,7 @@ runs:
         fi
         echo "snyk_output_sbom=$FILENAME" >> "${GITHUB_OUTPUT}"
     - name: Setup Snyk
-      uses: actions/snyk/setup@CLI-383-update-git-hub-actions-readme
+      uses: actions/snyk/setup@master
     - name: setup node
       uses: actions/setup-node@v3.8.1
       with:
