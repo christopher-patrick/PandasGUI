@@ -40,5 +40,9 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.token }}
-        run: snyk sbom --file=requirements.txt --format=cyclonedx1.5+json > sbom.json
+        run: |
+          : # Run Auth
+          snyk auth ${{secrets.SNYK_TOKEN}}
+          : # Generate SBOM
+          snyk sbom --file=requirements.txt --format=cyclonedx1.5+json > sbom.json
 
